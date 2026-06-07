@@ -5,36 +5,189 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Toppers Tool AI</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{min-height:100vh;background:linear-gradient(135deg,#1a1a2e,#0f3460);display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif}
-.card{background:white;border-radius:20px;padding:2rem;width:90%;max-width:380px;text-align:center}
-.logo{font-size:3rem}
-h2{color:#1a1a2e;margin:0.5rem 0 0.2rem}
-.sub{color:#888;font-size:0.9rem;margin-bottom:1.5rem}
-input{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px;font-size:14px}
-.btn{width:100%;padding:13px;margin:10px 0;background:linear-gradient(135deg,#1a1a2e,#0f3460);color:white;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer}
-.link{color:#888;font-size:14px;margin:6px 0}
-.link span{color:#0f3460;font-weight:bold;cursor:pointer}
-.error{color:red;font-size:13px}
+body{min-height:100vh;background:#000;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;overflow:hidden}
+.bg{position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,#120024 0%,#000 50%),radial-gradient(ellipse at 80% 50%,#001a3a 0%,transparent 50%);z-index:0}
+.particles{position:fixed;inset:0;z-index:1;pointer-events:none}
+.particle{position:absolute;width:2px;height:2px;background:#00ffff;border-radius:50%;animation:float linear infinite;box-shadow:0 0 6px #00ffff}
+@keyframes float{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-100px) rotate(720deg);opacity:0}}
+.scene{position:relative;z-index:10;width:100%;max-width:420px;padding:1rem}
+.card-3d{background:linear-gradient(135deg,rgba(0,20,40,0.95),rgba(10,0,30,0.95));border:1px solid rgba(0,255,255,0.3);border-radius:24px;padding:2rem;text-align:center;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(0,255,255,0.15),0 0 80px rgba(120,0,255,0.1),inset 0 0 40px rgba(0,255,255,0.03);transform:perspective(1000px) rotateX(2deg);transition:transform 0.3s}
+.card-3d::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,255,255,0.05) 0%,transparent 50%,rgba(120,0,255,0.05) 100%);pointer-events:none}
+.card-3d::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(0,255,255,0.08),transparent);animation:shimmer 3s infinite;pointer-events:none}
+@keyframes shimmer{0%{left:-100%}100%{left:200%}}
+.logo-wrap{position:relative;display:inline-block;margin-bottom:0.5rem}
+.logo-icon{font-size:3.5rem;filter:drop-shadow(0 0 20px rgba(0,255,255,0.8));animation:pulse-logo 2s ease-in-out infinite}
+@keyframes pulse-logo{0%,100%{filter:drop-shadow(0 0 20px rgba(0,255,255,0.8))}50%{filter:drop-shadow(0 0 40px rgba(0,255,255,1)) drop-shadow(0 0 60px rgba(120,0,255,0.5))}}
+.app-title{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:900;background:linear-gradient(90deg,#00ffff,#7700ff,#00ffff);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradient-move 3s linear infinite;letter-spacing:2px}
+@keyframes gradient-move{0%{background-position:0%}100%{background-position:200%}}
+.app-sub{color:rgba(0,255,255,0.6);font-size:0.85rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:1.5rem}
+.divider{height:1px;background:linear-gradient(90deg,transparent,#00ffff,#7700ff,transparent);margin:1rem 0;box-shadow:0 0 10px rgba(0,255,255,0.5)}
+.input-wrap{position:relative;margin:8px 0}
+.input-wrap i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(0,255,255,0.5);font-size:16px}
+input{width:100%;padding:13px 13px 13px 42px;background:rgba(0,255,255,0.05);border:1px solid rgba(0,255,255,0.2);border-radius:12px;color:#fff;font-size:15px;font-family:'Rajdhani',sans-serif;outline:none;transition:all 0.3s}
+input::placeholder{color:rgba(255,255,255,0.3)}
+input:focus{border-color:#00ffff;box-shadow:0 0 20px rgba(0,255,255,0.2),inset 0 0 10px rgba(0,255,255,0.05);background:rgba(0,255,255,0.08)}
+.btn-neon{width:100%;padding:14px;margin:10px 0;background:linear-gradient(135deg,#00ffff20,#7700ff20);border:1px solid #00ffff;border-radius:12px;color:#00ffff;font-size:16px;font-weight:700;font-family:'Orbitron',sans-serif;cursor:pointer;position:relative;overflow:hidden;transition:all 0.3s;letter-spacing:2px;text-transform:uppercase}
+.btn-neon::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#00ffff,#7700ff);opacity:0;transition:opacity 0.3s}
+.btn-neon:hover::before{opacity:0.2}
+.btn-neon:hover{box-shadow:0 0 30px rgba(0,255,255,0.5),0 0 60px rgba(0,255,255,0.2);transform:translateY(-2px)}
+.btn-google{width:100%;padding:13px;margin:6px 0;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.2);border-radius:12px;color:#fff;font-size:15px;font-family:'Rajdhani',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.3s;font-weight:600}
+.btn-google:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.4);transform:translateY(-2px)}
+.g-icon{width:20px;height:20px}
+.or-divider{display:flex;align-items:center;gap:10px;margin:8px 0;color:rgba(255,255,255,0.3);font-size:13px}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.1)}
+.link-text{color:rgba(0,255,255,0.7);font-size:14px;margin:6px 0;cursor:pointer}
+.link-text span{color:#00ffff;font-weight:700;text-decoration:none}
+.link-text span:hover{text-shadow:0 0 10px #00ffff}
+.error{color:#ff4466;font-size:13px;margin:4px 0;text-shadow:0 0 10px rgba(255,68,102,0.5)}
 .hidden{display:none}
+.success-icon{font-size:4rem;animation:bounce 1s ease-in-out;filter:drop-shadow(0 0 20px rgba(0,255,255,0.8))}
+@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.welcome-title{font-family:'Orbitron',sans-serif;font-size:1.4rem;color:#00ffff;text-shadow:0 0 20px rgba(0,255,255,0.8);margin:0.5rem 0}
+.welcome-sub{color:rgba(255,255,255,0.5);font-size:14px;margin-top:0.5rem}
+.admin-badge{display:inline-block;background:linear-gradient(135deg,#FFD700,#ff9500);color:#000;padding:4px 16px;border-radius:20px;font-weight:700;font-size:13px;margin:0.5rem 0;box-shadow:0 0 20px rgba(255,215,0,0.5)}
+.corner{position:absolute;width:20px;height:20px;border-color:#00ffff;border-style:solid;opacity:0.5}
+.corner-tl{top:10px;left:10px;border-width:2px 0 0 2px}
+.corner-tr{top:10px;right:10px;border-width:2px 2px 0 0}
+.corner-bl{bottom:10px;left:10px;border-width:0 0 2px 2px}
+.corner-br{bottom:10px;right:10px;border-width:0 2px 2px 0}
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="logo">📚</div>
-  <h2>Toppers Tool AI</h2>
-  <p class="sub">UP Board Class 10</p>
+<div class="bg"></div>
+<div class="particles" id="particles"></div>
+
+<div class="scene">
+<div class="card-3d">
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
 
   <div id="loginForm">
-    <input id="lemail" type="email" placeholder="Email"/>
-    <input id="lpass" type="password" placeholder="Password"/>
+    <div class="logo-wrap"><div class="logo-icon">📚</div></div>
+    <div class="app-title">Toppers Tool AI</div>
+    <div class="app-sub">UP Board • Class 10</div>
+    <div class="divider"></div>
+    <div class="input-wrap">
+      <i>✉</i>
+      <input id="lemail" type="email" placeholder="Email address"/>
+    </div>
+    <div class="input-wrap">
+      <i>🔒</i>
+      <input id="lpass" type="password" placeholder="Password"/>
+    </div>
     <p class="error hidden" id="lerr"></p>
-    <button class="btn" onclick="doLogin()">Login</button>
-    <p class="link"><span onclick="show('forgotForm')">Password bhool gaye?</span></p>
-    <p class="link">Naya account? <span onclick="show('signupForm')">Sign Up</span></p>
+    <button class="btn-neon" onclick="doLogin()">Login</button>
+    <div class="or-divider">ya</div>
+    <button class="btn-google" onclick="googleLogin()">
+      <svg class="g-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Google se Login
+    </button>
+    <p class="link-text" onclick="show('forgotForm')">🔑 Password bhool gaye?</p>
+    <p class="link-text">Naya account? <span onclick="show('signupForm')">Sign Up karein</span></p>
   </div>
 
   <div id="signupForm" class="hidden">
+    <div class="logo-icon">✨</div>
+    <div class="app-title" style="font-size:1.2rem">Naya Account</div>
+    <div class="app-sub">Abhi join karein!</div>
+    <div class="divider"></div>
+    <div class="input-wrap"><i>👤</i><input id="sname" placeholder="Apna poora naam"/></div>
+    <div class="input-wrap"><i>✉</i><input id="semail" type="email" placeholder="Email address"/></div>
+    <div class="input-wrap"><i>🔒</i><input id="spass" type="password" placeholder="Password (min 6 characters)"/></div>
+    <p class="error hidden" id="serr"></p>
+    <button class="btn-neon" onclick="doSignup()">Sign Up</button>
+    <div class="or-divider">ya</div>
+    <button class="btn-google" onclick="googleLogin()">
+      <svg class="g-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Google se Sign Up
+    </button>
+    <p class="link-text">Pehle se account hai? <span onclick="show('loginForm')">Login karein</span></p>
+  </div>
+
+  <div id="forgotForm" class="hidden">
+    <div class="logo-icon">🔑</div>
+    <div class="app-title" style="font-size:1.2rem">Reset Password</div>
+    <div class="app-sub">Email daalo — link aayega!</div>
+    <div class="divider"></div>
+    <div class="input-wrap"><i>✉</i><input id="femail" type="email" placeholder="Registered email"/></div>
+    <button class="btn-neon" onclick="doForgot()">Reset Link Bhejo</button>
+    <p class="link-text"><span onclick="show('loginForm')">← Wapas Login</span></p>
+  </div>
+
+  <div id="studentHome" class="hidden">
+    <div class="success-icon">🎉</div>
+    <div class="welcome-title">Welcome!</div>
+    <p class="welcome-sub" id="studentEmail"></p>
+    <div class="divider"></div>
+    <p class="welcome-sub">Student Dashboard</p>
+    <p class="welcome-sub" style="margin-top:0.5rem;color:rgba(0,255,255,0.5)">Jald aur features aa rahe hain! 🚀</p>
+  </div>
+
+  <div id="adminHome" class="hidden">
+    <div class="success-icon">👑</div>
+    <div class="welcome-title">Admin Dashboard</div>
+    <div class="admin-badge">⚡ MASTER ID</div>
+    <div class="divider"></div>
+    <p class="welcome-sub">Sabhi features yahan milenge!</p>
+    <p class="welcome-sub" style="margin-top:0.5rem;color:rgba(255,215,0,0.6)">Notice • Books • MCQ • Students</p>
+  </div>
+
+</div>
+</div>
+
+<script>
+const ADMIN="itzamanraj07@gmail.com";
+function show(id){
+  ['loginForm','signupForm','forgotForm','studentHome','adminHome'].forEach(x=>{
+    document.getElementById(x).classList.add('hidden');
+  });
+  document.getElementById(id).classList.remove('hidden');
+}
+function doLogin(){
+  const e=document.getElementById('lemail').value.trim();
+  const p=document.getElementById('lpass').value;
+  const err=document.getElementById('lerr');
+  if(!e||!p){err.textContent="Email aur password daalo!";err.classList.remove('hidden');return;}
+  err.classList.add('hidden');
+  if(e===ADMIN){show('adminHome');}
+  else{document.getElementById('studentEmail').textContent=e;show('studentHome');}
+}
+function doSignup(){
+  const n=document.getElementById('sname').value.trim();
+  const e=document.getElementById('semail').value.trim();
+  const p=document.getElementById('spass').value;
+  const err=document.getElementById('serr');
+  if(!n||!e||!p){err.textContent="Sab fields bharo!";err.classList.remove('hidden');return;}
+  if(p.length<6){err.textContent="Password kam se kam 6 characters ka hona chahiye!";err.classList.remove('hidden');return;}
+  err.classList.add('hidden');
+  document.getElementById('studentEmail').textContent=e;
+  show('studentHome');
+}
+function doForgot(){
+  const e=document.getElementById('femail').value.trim();
+  if(!e){alert("Email daalo pehle!");return;}
+  alert("✅ Reset link bhej diya!\n\nApni email check karein: "+e);
+  show('loginForm');
+}
+function googleLogin(){
+  alert("🔧 Google Login jald available hoga!\nAbhi Email se login karein.");
+}
+// Particles
+const pc=document.getElementById('particles');
+for(let i=0;i<40;i++){
+  const p=document.createElement('div');
+  p.className='particle';
+  p.style.cssText=`left:${Math.random()*100}%;animation-duration:${5+Math.random()*10}s;animation-delay:${Math.random()*10}s;width:${Math.random()>0.7?3:2}px;height:${Math.random()>0.7?3:2}px;opacity:${0.3+Math.random()*0.7}`;
+  if(Math.random()>0.5)p.style.background='#7700ff';
+  pc.appendChild(p);
+}
+</script>
+</body>
+</html>  <div id="signupForm" class="hidden">
     <input id="sname" placeholder="Apna naam"/>
     <input id="semail" type="email" placeholder="Email"/>
     <input id="spass" type="password" placeholder="Password (min 6 characters)"/>

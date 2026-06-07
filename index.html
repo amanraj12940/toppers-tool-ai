@@ -2,39 +2,201 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Toppers Tool AI</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{min-height:100vh;background:#000;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;overflow:hidden}
-.bg{position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,#120024 0%,#000 50%),radial-gradient(ellipse at 80% 50%,#001a3a 0%,transparent 50%);z-index:0}
-.particles{position:fixed;inset:0;z-index:1;pointer-events:none}
+html,body{width:100%;min-height:100vh;overflow-x:hidden}
+body{background:#000;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;padding:1rem}
+.bg{position:fixed;inset:0;background:radial-gradient(ellipse at 30% 40%,#120024,#000 60%),radial-gradient(ellipse at 70% 60%,#001a3a,transparent 60%);z-index:0}
+.particles{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
 .particle{position:absolute;width:2px;height:2px;background:#00ffff;border-radius:50%;animation:float linear infinite;box-shadow:0 0 6px #00ffff}
-@keyframes float{0%{transform:translateY(100vh);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-100px);opacity:0}}
-.scene{position:relative;z-index:10;width:100%;max-width:420px;padding:1rem}
-.card-3d{background:linear-gradient(135deg,rgba(0,20,40,0.95),rgba(10,0,30,0.95));border:1px solid rgba(0,255,255,0.3);border-radius:24px;padding:2rem;text-align:center;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(0,255,255,0.15),0 0 80px rgba(120,0,255,0.1),inset 0 0 40px rgba(0,255,255,0.03)}
-.card-3d::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(0,255,255,0.08),transparent);animation:shimmer 3s infinite;pointer-events:none}
+@keyframes float{0%{transform:translateY(110vh);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-10vh);opacity:0}}
+.scene{position:relative;z-index:10;width:100%;max-width:400px;margin:0 auto}
+.card-3d{background:linear-gradient(135deg,rgba(0,20,40,0.97),rgba(10,0,30,0.97));border:1px solid rgba(0,255,255,0.3);border-radius:24px;padding:2rem 1.5rem;text-align:center;position:relative;overflow:hidden;box-shadow:0 0 40px rgba(0,255,255,0.15),0 0 80px rgba(120,0,255,0.1)}
+.card-3d::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(0,255,255,0.06),transparent);animation:shimmer 4s infinite;pointer-events:none}
 @keyframes shimmer{0%{left:-100%}100%{left:200%}}
-.logo-icon{font-size:3.5rem;filter:drop-shadow(0 0 20px rgba(0,255,255,0.8));animation:pulse-logo 2s ease-in-out infinite;display:block;margin-bottom:0.5rem}
-@keyframes pulse-logo{0%,100%{filter:drop-shadow(0 0 20px rgba(0,255,255,0.8))}50%{filter:drop-shadow(0 0 40px rgba(0,255,255,1))}}
-.app-title{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:900;background:linear-gradient(90deg,#00ffff,#7700ff,#00ffff);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradient-move 3s linear infinite;letter-spacing:2px}
-@keyframes gradient-move{0%{background-position:0%}100%{background-position:200%}}
-.app-sub{color:rgba(0,255,255,0.6);font-size:0.85rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:1.5rem}
-.divider{height:1px;background:linear-gradient(90deg,transparent,#00ffff,#7700ff,transparent);margin:1rem 0}
-.input-wrap{position:relative;margin:8px 0}
-.input-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px}
-input{width:100%;padding:13px 13px 13px 42px;background:rgba(0,255,255,0.05);border:1px solid rgba(0,255,255,0.2);border-radius:12px;color:#fff;font-size:15px;font-family:'Rajdhani',sans-serif;outline:none;transition:all 0.3s}
+.corner{position:absolute;width:18px;height:18px;border-color:#00ffff;border-style:solid;opacity:0.6}
+.tl{top:10px;left:10px;border-width:2px 0 0 2px}
+.tr{top:10px;right:10px;border-width:2px 2px 0 0}
+.bl{bottom:10px;left:10px;border-width:0 0 2px 2px}
+.br{bottom:10px;right:10px;border-width:0 2px 2px 0}
+.logo{font-size:3rem;display:block;margin-bottom:0.3rem;filter:drop-shadow(0 0 15px rgba(0,255,255,0.8));animation:glow 2s ease-in-out infinite}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 15px rgba(0,255,255,0.8))}50%{filter:drop-shadow(0 0 30px rgba(0,255,255,1))}}
+.title{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;background:linear-gradient(90deg,#00ffff,#7700ff,#00ffff);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gtitle 3s linear infinite;letter-spacing:2px;line-height:1.3}
+@keyframes gtitle{0%{background-position:0%}100%{background-position:200%}}
+.sub{color:rgba(0,255,255,0.6);font-size:0.8rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:1.2rem}
+.divider{height:1px;background:linear-gradient(90deg,transparent,#00ffff,#7700ff,transparent);margin:0.8rem 0}
+.iw{position:relative;margin:7px 0}
+.ii{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px}
+input{width:100%;padding:12px 12px 12px 38px;background:rgba(0,255,255,0.05);border:1px solid rgba(0,255,255,0.2);border-radius:10px;color:#fff;font-size:15px;font-family:'Rajdhani',sans-serif;outline:none;transition:all 0.3s}
 input::placeholder{color:rgba(255,255,255,0.3)}
-input:focus{border-color:#00ffff;box-shadow:0 0 20px rgba(0,255,255,0.2);background:rgba(0,255,255,0.08)}
-.btn-neon{width:100%;padding:14px;margin:10px 0;background:linear-gradient(135deg,rgba(0,255,255,0.1),rgba(119,0,255,0.1));border:1px solid #00ffff;border-radius:12px;color:#00ffff;font-size:16px;font-weight:700;font-family:'Orbitron',sans-serif;cursor:pointer;transition:all 0.3s;letter-spacing:2px;text-transform:uppercase}
-.btn-neon:hover{box-shadow:0 0 30px rgba(0,255,255,0.5);transform:translateY(-2px)}
-.btn-google{width:100%;padding:13px;margin:6px 0;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.2);border-radius:12px;color:#fff;font-size:15px;font-family:'Rajdhani',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.3s;font-weight:600}
-.btn-google:hover{background:rgba(255,255,255,0.1);transform:translateY(-2px)}
-.or-div{display:flex;align-items:center;gap:10px;margin:8px 0;color:rgba(255,255,255,0.3);font-size:13px}
-.or-div::before,.or-div::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.1)}
+input:focus{border-color:#00ffff;box-shadow:0 0 15px rgba(0,255,255,0.2);background:rgba(0,255,255,0.08)}
+.btn{width:100%;padding:13px;margin:8px 0;background:linear-gradient(135deg,rgba(0,255,255,0.1),rgba(119,0,255,0.1));border:1px solid #00ffff;border-radius:10px;color:#00ffff;font-size:15px;font-weight:700;font-family:'Orbitron',sans-serif;cursor:pointer;transition:all 0.3s;letter-spacing:1px;text-transform:uppercase}
+.btn:hover{box-shadow:0 0 25px rgba(0,255,255,0.4);transform:translateY(-1px)}
+.btn:active{transform:scale(0.98)}
+.gbtn{width:100%;padding:12px;margin:5px 0;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:#fff;font-size:14px;font-family:'Rajdhani',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.3s;font-weight:600}
+.gbtn:hover{background:rgba(255,255,255,0.1);transform:translateY(-1px)}
+.ord{display:flex;align-items:center;gap:8px;margin:6px 0;color:rgba(255,255,255,0.3);font-size:13px}
+.ord::before,.ord::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.1)}
+.lt{color:rgba(0,255,255,0.7);font-size:13px;margin:5px 0;cursor:pointer}
+.lt span{color:#00ffff;font-weight:700}
+.err{color:#ff4466;font-size:12px;margin:3px 0;text-shadow:0 0 8px rgba(255,68,102,0.4)}
+.ok{color:#00ff88;font-size:12px;margin:3px 0}
+.load{color:#00ffff;font-size:13px;margin:4px 0}
+.hidden{display:none}
+.wi{font-size:3.5rem;display:block;margin-bottom:0.3rem}
+.wt{font-family:'Orbitron',sans-serif;font-size:1.3rem;color:#00ffff;text-shadow:0 0 15px rgba(0,255,255,0.7);margin:0.3rem 0}
+.ws{color:rgba(255,255,255,0.5);font-size:13px;margin-top:0.4rem}
+.ab{display:inline-block;background:linear-gradient(135deg,#FFD700,#ff9500);color:#000;padding:3px 14px;border-radius:20px;font-weight:700;font-size:12px;margin:0.4rem 0;box-shadow:0 0 15px rgba(255,215,0,0.4)}
+.abtn{border-color:#FFD700;color:#FFD700}
+.abtn:hover{box-shadow:0 0 25px rgba(255,215,0,0.4)}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="particles" id="particles"></div>
+<div class="scene">
+<div class="card-3d">
+<div class="corner tl"></div><div class="corner tr"></div>
+<div class="corner bl"></div><div class="corner br"></div>
+
+<!-- LOGIN -->
+<div id="loginForm">
+<span class="logo">📚</span>
+<div class="title">Toppers Tool AI</div>
+<div class="sub">UP Board • Class 10</div>
+<div class="divider"></div>
+<div class="iw"><span class="ii">✉️</span><input id="le" type="email" placeholder="Email address"/></div>
+<div class="iw"><span class="ii">🔒</span><input id="lp" type="password" placeholder="Password"/></div>
+<p class="err hidden" id="lerr"></p>
+<p class="load hidden" id="lload">⏳ Login ho raha hai...</p>
+<button class="btn" onclick="doLogin()">Login</button>
+<div class="ord">ya</div>
+<button class="gbtn" onclick="googleLogin()"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Google se Login</button>
+<p class="lt" onclick="show('forgotForm')">🔑 Password bhool gaye?</p>
+<p class="lt">Naya account? <span onclick="show('signupForm')">Sign Up karein</span></p>
+</div>
+
+<!-- SIGNUP -->
+<div id="signupForm" class="hidden">
+<span class="logo">✨</span>
+<div class="title" style="font-size:1.1rem">Naya Account</div>
+<div class="sub">Abhi join karein!</div>
+<div class="divider"></div>
+<div class="iw"><span class="ii">👤</span><input id="sn" placeholder="Apna poora naam"/></div>
+<div class="iw"><span class="ii">✉️</span><input id="se" type="email" placeholder="Email address"/></div>
+<div class="iw"><span class="ii">🔒</span><input id="sp" type="password" placeholder="Password (min 6 characters)"/></div>
+<p class="err hidden" id="serr"></p>
+<p class="load hidden" id="sload">⏳ Account ban raha hai...</p>
+<button class="btn" onclick="doSignup()">Sign Up</button>
+<div class="ord">ya</div>
+<button class="gbtn" onclick="googleLogin()"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Google se Sign Up</button>
+<p class="lt">Pehle se account hai? <span onclick="show('loginForm')">Login karein</span></p>
+</div>
+
+<!-- FORGOT -->
+<div id="forgotForm" class="hidden">
+<span class="logo">🔑</span>
+<div class="title" style="font-size:1.1rem">Reset Password</div>
+<div class="sub">Email daalo — reset link aayega!</div>
+<div class="divider"></div>
+<div class="iw"><span class="ii">✉️</span><input id="fe" type="email" placeholder="Registered email"/></div>
+<p class="err hidden" id="ferr"></p>
+<p class="ok hidden" id="fok">✅ Reset link bhej diya! Email check karein!</p>
+<p class="load hidden" id="fload">⏳ Email bheja ja raha hai...</p>
+<button class="btn" onclick="doForgot()">Reset Link Bhejo</button>
+<p class="lt"><span onclick="show('loginForm')">← Wapas Login</span></p>
+</div>
+
+<!-- STUDENT HOME -->
+<div id="studentHome" class="hidden">
+<span class="wi">🎉</span>
+<div class="wt">Welcome!</div>
+<p class="ws" id="sname"></p>
+<div class="divider"></div>
+<p class="ws">Student Dashboard</p>
+<p class="ws" style="color:rgba(0,255,255,0.5);margin-top:0.4rem">Jald aur features aa rahe hain! 🚀</p>
+<button class="btn" style="margin-top:1rem" onclick="doLogout()">Logout</button>
+</div>
+
+<!-- ADMIN HOME -->
+<div id="adminHome" class="hidden">
+<span class="wi">👑</span>
+<div class="wt">Admin Dashboard</div>
+<div class="ab">⚡ MASTER ID</div>
+<div class="divider"></div>
+<p class="ws">Sabhi features yahan milenge!</p>
+<p class="ws" style="color:rgba(255,215,0,0.6);margin-top:0.4rem">Notice • Books • MCQ • Students</p>
+<button class="btn abtn" style="margin-top:1rem" onclick="doLogout()">Logout</button>
+</div>
+
+</div>
+</div>
+<script>
+const FC={
+  apiKey:"AIzaSyA9lCiSvQ7j7MpmsScf6hy_6e1ZWcjONnA",
+  authDomain:"toppers-tool-ai.firebaseapp.com",
+  projectId:"toppers-tool-ai",
+  storageBucket:"toppers-tool-ai.firebasestorage.app",
+  messagingSenderId:"704301082966",
+  appId:"1:704301082966:web:5803eb29c97d8a8d234ef7"
+};
+firebase.initializeApp(FC);
+const auth=firebase.auth();
+const ADMIN="itzamanraj07@gmail.com";
+function show(id){['loginForm','signupForm','forgotForm','studentHome','adminHome'].forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById(id).classList.remove('hidden')}
+function sl(id,v){document.getElementById(id).classList[v?'remove':'add']('hidden')}
+auth.onAuthStateChanged(u=>{
+  if(u){
+    if(u.email===ADMIN){show('adminHome')}
+    else{document.getElementById('sname').textContent=u.displayName||u.email;show('studentHome')}
+  }
+});
+function doLogin(){
+  const e=document.getElementById('le').value.trim(),p=document.getElementById('lp').value,err=document.getElementById('lerr');
+  if(!e||!p){err.textContent="Email aur password daalo!";sl('lerr',true);return}
+  sl('lerr',false);sl('lload',true);
+  auth.signInWithEmailAndPassword(e,p)
+  .then(()=>sl('lload',false))
+  .catch(er=>{sl('lload',false);err.textContent=er.code==='auth/user-not-found'?'Email registered nahi hai!':er.code==='auth/wrong-password'||er.code==='auth/invalid-credential'?'Password galat hai!':'Error: '+er.message;sl('lerr',true)})
+}
+function doSignup(){
+  const n=document.getElementById('sn').value.trim(),e=document.getElementById('se').value.trim(),p=document.getElementById('sp').value,err=document.getElementById('serr');
+  if(!n||!e||!p){err.textContent="Sab fields bharo!";sl('serr',true);return}
+  if(p.length<6){err.textContent="Password kam se kam 6 characters ka hona chahiye!";sl('serr',true);return}
+  sl('serr',false);sl('sload',true);
+  auth.createUserWithEmailAndPassword(e,p)
+  .then(r=>r.user.updateProfile({displayName:n}))
+  .then(()=>sl('sload',false))
+  .catch(er=>{sl('sload',false);err.textContent=er.code==='auth/email-already-in-use'?'Yeh email pehle se registered hai!':'Error: '+er.message;sl('serr',true)})
+}
+function doForgot(){
+  const e=document.getElementById('fe').value.trim(),err=document.getElementById('ferr');
+  if(!e){err.textContent="Email daalo pehle!";sl('ferr',true);return}
+  sl('ferr',false);sl('fload',true);
+  auth.sendPasswordResetEmail(e)
+  .then(()=>{sl('fload',false);sl('fok',true)})
+  .catch(er=>{sl('fload',false);err.textContent='Email nahi mila: '+er.message;sl('ferr',true)})
+}
+function googleLogin(){
+  const p=new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(p).catch(er=>alert('Google login failed: '+er.message))
+}
+function doLogout(){auth.signOut().then(()=>show('loginForm'))}
+const pc=document.getElementById('particles');
+for(let i=0;i<35;i++){
+  const p=document.createElement('div');p.className='particle';
+  p.style.cssText=`left:${Math.random()*100}%;animation-duration:${6+Math.random()*10}s;animation-delay:${Math.random()*8}s;opacity:${0.4+Math.random()*0.6}`;
+  if(Math.random()>0.6)p.style.background='#7700ff';
+  pc.appendChild(p)
+}
+</script>
+</body>
+</html>.or-div::before,.or-div::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.1)}
 .link-text{color:rgba(0,255,255,0.7);font-size:14px;margin:6px 0;cursor:pointer}
 .link-text span{color:#00ffff;font-weight:700;cursor:pointer}
 .error{color:#ff4466;font-size:13px;margin:4px 0}
